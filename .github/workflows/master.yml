@@ -20,7 +20,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build . -t registry.digitalocean.com/containerhatch/app:hatch-social
+          docker build --no-cache -t registry.digitalocean.com/containerhatch/app:hatch-social .
           docker push registry.digitalocean.com/containerhatch/app:hatch-social
 
       - name: Install sshpass
@@ -71,13 +71,13 @@ jobs:
             fi
             
             # Detener y eliminar todos los contenedores si existen
-            docker-compose down || true
+            docker-compose down -v || true
             
             # Eliminar todas las imágenes si existen
             docker-compose rm -f || true
             
             # Reiniciar los servicios
-            docker-compose up -d
+            docker-compose up --build --force-recreate -d
             echo "Completed Docker operations"  
           EOF
         env:
